@@ -3,5 +3,6 @@
 
 #include "UefiBaseType.h"
 #include "UefiSpec.h"
+#include "Protocol/Pcd.h"
 
 #endif
