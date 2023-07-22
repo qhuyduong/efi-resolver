@@ -14,18 +14,7 @@ def init_protocol_mapping():
     if protocols is not None:
         return True
 
-    # Find the EFI type definition file within the Binary Ninja installation
-    if sys.platform == "darwin":
-        efi_def_path = os.path.join(bundled_plugin_path(), "..", "..", "Resources", "types", "efi.c")
-    else:
-        efi_def_path = os.path.join(bundled_plugin_path(), "..", "types", "efi.c")
-
-    # Try to read the EFI type definitions. This may not exist on older versions of Binary Ninja.
-    try:
-        efi_defs = open(efi_def_path, "r").readlines()
-    except:
-        log_alert(f"Could not open EFI type definition file at '{efi_def_path}'. Your version of Binary Ninja may be out of date. Please update to version 3.5.4331 or higher.")
-        return False
+    efi_defs = open(os.path.join(os.path.dirname(__file__), "types", "efi.c"), "r").readlines()
 
     protocols = {}
 
