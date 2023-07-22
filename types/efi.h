@@ -4,5 +4,6 @@
 #include "UefiBaseType.h"
 #include "UefiSpec.h"
 #include "Protocol/Pcd.h"
+#include "Protocol/MmBase.h"
 
 #endif
