@@ -1,7 +1,7 @@
 from binaryninja import (BinaryView, BackgroundTask, PointerType, NamedTypeReferenceType, HighLevelILCallSsa,
                          SSAVariable, Constant, HighLevelILAssign, HighLevelILAssignMemSsa, HighLevelILDerefSsa,
                          Function, Variable, HighLevelILDerefFieldSsa, HighLevelILVarInitSsa, HighLevelILVarSsa,
-                         StructureType, log_info, log_warn)
+                         StructureType, log_info, log_warn, Type)
 from typing import List
 import glob
 import os
@@ -16,6 +16,15 @@ def import_types_from_headers(bv: BinaryView):
         types = bv.platform.parse_types_from_source_file(hdr)
         for name, type in types.types.items():
             bv.define_user_type(name, type)
+
+def rename_entry_function(bv: BinaryView):
+    entry_func = bv.entry_function
+    entry_func.name = "ModuleEntryPoint"
+    entry_func.return_type = Type.named_type_from_registered_type(bv, 'EFI_STATUS')
+    entry_func.parameter_vars[0].name = "ImageHandle"
+    entry_func.parameter_vars[0].type = Type.named_type_from_registered_type(bv, 'EFI_HANDLE')
+    entry_func.parameter_vars[1].name = "SystemTable"
+    entry_func.parameter_vars[1].type = Type.pointer(bv, Type.named_type_from_registered_type(bv, 'EFI_SYSTEM_TABLE'))
 
 def propagate_variable_uses(bv: BinaryView, func: Function, var: SSAVariable, func_queue: List[Function]) -> bool:
     global types_to_propagate, var_name_for_type

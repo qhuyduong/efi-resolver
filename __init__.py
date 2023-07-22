@@ -1,6 +1,6 @@
 from binaryninja import PluginCommand, BinaryView, BackgroundTaskThread, log_alert
 from .protocols import init_protocol_mapping, define_handle_protocol_types, define_open_protocol_types, define_locate_protocol_types
-from .system_table import import_types_from_headers, propagate_system_table_pointer
+from .system_table import import_types_from_headers, rename_entry_function, propagate_system_table_pointer
 
 def resolve_efi(bv: BinaryView):
     class Task(BackgroundTaskThread):
@@ -20,6 +20,8 @@ def resolve_efi(bv: BinaryView):
 
             self.bv.begin_undo_actions()
             try:
+                rename_entry_function(self.bv)
+
                 self.progress = "Propagating EFI system table pointers..."
                 if not propagate_system_table_pointer(self.bv, self):
                     return

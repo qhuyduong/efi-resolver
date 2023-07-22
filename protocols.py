@@ -238,7 +238,7 @@ def define_protocol_types_for_refs(bv: BinaryView, func_name: str, refs, guid_pa
     return True
 
 def define_protocol_types(bv: BinaryView, field: str, guid_param: int, interface_param: int, task: BackgroundTask) -> bool:
-    boot_services = bv.types["EFI_BOOT_SERVICES"]
+    boot_services = bv.types["EFI_BOOT_SERVICES"].target(bv)
     offset = None
     for member in boot_services.members:
         if member.name == field:
