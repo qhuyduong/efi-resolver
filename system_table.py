@@ -3,10 +3,19 @@ from binaryninja import (BinaryView, BackgroundTask, PointerType, NamedTypeRefer
                          Function, Variable, HighLevelILDerefFieldSsa, HighLevelILVarInitSsa, HighLevelILVarSsa,
                          StructureType, log_info, log_warn)
 from typing import List
+import glob
+import os
 
 types_to_propagate = ["EFI_SYSTEM_TABLE", "EFI_RUNTIME_SERVICES", "EFI_BOOT_SERVICES"]
 var_name_for_type = {"EFI_SYSTEM_TABLE": "SystemTable", "EFI_RUNTIME_SERVICES": "RuntimeServices",
                         "EFI_BOOT_SERVICES": "BootServices"}
+
+def import_types_from_headers(bv: BinaryView):
+    efi_hdrs = glob.glob(os.path.join(os.path.dirname(__file__), "types", "efi.h"))
+    for hdr in efi_hdrs:
+        types = bv.platform.parse_types_from_source_file(hdr)
+        for name, type in types.types.items():
+            bv.define_user_type(name, type)
 
 def propagate_variable_uses(bv: BinaryView, func: Function, var: SSAVariable, func_queue: List[Function]) -> bool:
     global types_to_propagate, var_name_for_type
