@@ -22,14 +22,6 @@ no special instructions, package manager is recommended
 
 no special instructions, package manager is recommended
 
-## Minimum Version
-
-This plugin requires the following minimum version of Binary Ninja:
-
-* 4333
-
-
-
 ## Required Dependencies
 
 The following dependencies are required for this plugin:
