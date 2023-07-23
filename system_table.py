@@ -111,7 +111,7 @@ def propagate_variable_uses(
                 continue
             if not isinstance(expr_type.target, StructureType):
                 continue
-            if expr_type.target.registered_name.name not in types_to_propagate:
+            if str(expr_type.target.registered_name.name).lstrip("_") not in types_to_propagate:
                 continue
 
             # See if this is an assignment to a variable, and propagate that variable if so
@@ -148,7 +148,7 @@ def propagate_variable_uses(
             func.create_user_var(
                 target.var,
                 expr_type,
-                var_name_for_type[expr_type.target.registered_name.name],
+                var_name_for_type[str(expr_type.target.registered_name.name).lstrip("_")],
             )
             propagate_variable_uses(bv, func, target, func_queue)
             updates = True
