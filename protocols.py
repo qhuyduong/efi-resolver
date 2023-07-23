@@ -79,25 +79,7 @@ def lookup_protocol_guid(guid: bytes) -> Optional[Tuple[str, str]]:
 
 
 def variable_name_for_protocol(protocol: str) -> str:
-    name = protocol
-    if name.startswith("EFI_"):
-        name = name[4:]
-    if name.endswith("_GUID"):
-        name = name[:-5]
-    if name.endswith("_PROTOCOL"):
-        name = name[:-9]
-    case_str = ""
-    first = True
-    for c in name:
-        if c == "_":
-            first = True
-            continue
-        elif first:
-            case_str += c.upper()
-            first = False
-        else:
-            case_str += c.lower()
-    return case_str
+    return protocol.rstrip("Protocol")
 
 
 def nonconflicting_variable_name(func: Function, base_name: str) -> str:

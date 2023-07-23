@@ -2,33 +2,15 @@ import re
 import sys
 
 
-def convert_to_g_guid(name):
-    words = name.split("_")
-    camel_case = "".join(word.capitalize() for word in words)
-    g_guid = "g" + camel_case
-    return g_guid
-
-
 def convert_file(input_file, output_file):
     with open(input_file, "r") as infile, open(output_file, "w") as outfile:
-        content = infile.read()
-
-        # Regular expression to find protocol name and GUID
-        pattern = re.compile(r"#define\s+(\w+)\s+.*?\{(.*?)\}", re.DOTALL)
-
-        # Find all occurrences of the protocol name and GUID
-        matches = pattern.findall(content)
-
-        # Write the converted output to the outfile
-        for protocol, guid in matches:
-            guid = re.sub(r"\s+", "", guid)  # Remove whitespace from the GUID
-            guid = re.sub(r"\\+", "", guid)  # Remove backslashes from the GUID
-            protocol = protocol.rstrip("_GUID")
-            if "PROTOCOL" not in protocol:
-                protocol += "_PROTOCOL"
-            outfile.write(f"///@protocol {{{guid}}}}}\n")
-            outfile.write(f"///@binding {convert_to_g_guid(protocol)} {{{guid}}}}}\n")
-            outfile.write(f"struct {protocol}\n\n")
+        for line in infile.readlines():
+            name = line.split("=")[0].replace(" ", "")
+            guid = line.split("=")[1].replace(" ", "")
+            outfile.write(f"///@protocol {guid}")
+            outfile.write(f"///@binding {name} {guid}")
+            protocol = re.sub(r"(?<!^)(?=[A-Z])", "_", name[1:]).upper()
+            outfile.write(f"struct {protocol.replace('_GUID', '')}\n\n")
 
 
 if __name__ == "__main__":
