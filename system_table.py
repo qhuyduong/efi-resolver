@@ -146,7 +146,7 @@ def propagate_variable_uses(
                 bv.define_user_data_var(
                     target.constant,
                     expr_type,
-                    var_name_for_type[expr_type.target.registered_name.name],
+                    var_name_for_type[str(expr_type.target.registered_name.name).lstrip("_")],
                 )
                 updates = True
                 continue
