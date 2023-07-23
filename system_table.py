@@ -97,11 +97,16 @@ def propagate_variable_uses(
             if not isinstance(target, Constant):
                 continue
 
+            try:
+                name = var.type.target.name
+            except:
+                name = var.type.target.registered_name.name
+
             log_info(
-                f"Propagating {var.type.target.name} pointer to data variable at {hex(target.constant)}"
+                f"Propagating {name} pointer to data variable at {hex(target.constant)}"
             )
             bv.define_user_data_var(
-                target.constant, var.type, var_name_for_type[var.type.target.name]
+                target.constant, var.type, var_name_for_type[str(name).lstrip("_")]
             )
             updates = True
         elif isinstance(instr, HighLevelILDerefFieldSsa):
@@ -111,7 +116,10 @@ def propagate_variable_uses(
                 continue
             if not isinstance(expr_type.target, StructureType):
                 continue
-            if str(expr_type.target.registered_name.name).lstrip("_") not in types_to_propagate:
+            if (
+                str(expr_type.target.registered_name.name).lstrip("_")
+                not in types_to_propagate
+            ):
                 continue
 
             # See if this is an assignment to a variable, and propagate that variable if so
@@ -148,7 +156,9 @@ def propagate_variable_uses(
             func.create_user_var(
                 target.var,
                 expr_type,
-                var_name_for_type[str(expr_type.target.registered_name.name).lstrip("_")],
+                var_name_for_type[
+                    str(expr_type.target.registered_name.name).lstrip("_")
+                ],
             )
             propagate_variable_uses(bv, func, target, func_queue)
             updates = True
