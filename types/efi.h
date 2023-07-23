@@ -10,5 +10,6 @@
 #include "Protocol/PcdInfo.h"
 #include "Protocol/PiPcdInfo.h"
 #include "Protocol/MmAccess.h"
+#include "Protocol/DevicePathUtilities.h"
 
 #endif
