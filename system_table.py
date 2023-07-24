@@ -145,8 +145,10 @@ def propagate_variable_uses(
                 )
                 bv.define_user_data_var(
                     target.constant,
-                    expr_type,
-                    var_name_for_type[str(expr_type.target.registered_name.name).lstrip("_")],
+                    str(expr_type).replace("struct _", ""),
+                    var_name_for_type[
+                        str(expr_type.target.registered_name.name).lstrip("_")
+                    ],
                 )
                 updates = True
                 continue
