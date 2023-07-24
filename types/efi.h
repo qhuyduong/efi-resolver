@@ -13,5 +13,8 @@
 #include "Protocol/DevicePathUtilities.h"
 #include "Protocol/SmbusHc.h"
 #include "Protocol/HiiString.h"
+#include "Protocol/HiiDatabase.h"
+#include "Protocol/HiiConfigRouting.h"
+#include "Protocol/MmCommunication.h"
 
 #endif

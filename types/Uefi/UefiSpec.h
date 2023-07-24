@@ -2235,5 +2235,6 @@ typedef struct {
 // #include <Uefi/UefiPxe.h>
 // #include <Uefi/UefiGpt.h>
 // #include <Uefi/UefiInternalFormRepresentation.h>
+#include "Uefi/UefiInternalFormRepresentation.h"
 
 #endif
