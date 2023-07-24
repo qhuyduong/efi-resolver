@@ -79,7 +79,7 @@ def lookup_protocol_guid(guid: bytes) -> Optional[Tuple[str, str]]:
 
 
 def variable_name_for_protocol(protocol: str) -> str:
-    return protocol.rstrip("Protocol")
+    return protocol.rstrip("Guid").rstrip("Protocol")
 
 
 def nonconflicting_variable_name(func: Function, base_name: str) -> str:
