@@ -4,6 +4,7 @@ from .protocols import (
     define_handle_protocol_types,
     define_open_protocol_types,
     define_locate_protocol_types,
+    define_install_protocol_interface_types,
 )
 from .system_table import (
     import_types_from_headers,
@@ -48,6 +49,10 @@ def resolve_efi(bv: BinaryView):
 
                 self.progress = "Defining types for uses of LocateProtocol..."
                 if not define_locate_protocol_types(self.bv, self):
+                    return
+
+                self.progress = "Defining types for uses of InstallProtocolInterface..."
+                if not define_install_protocol_interface_types(self.bv, self):
                     return
             finally:
                 self.bv.commit_undo_actions()

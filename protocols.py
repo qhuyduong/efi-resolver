@@ -316,3 +316,7 @@ def define_open_protocol_types(bv: BinaryView, task: BackgroundTask) -> bool:
 
 def define_locate_protocol_types(bv: BinaryView, task: BackgroundTask) -> bool:
     return define_protocol_types(bv, "LocateProtocol", 0, 2, task)
+
+
+def define_install_protocol_interface_types(bv: BinaryView, task: BackgroundTask) -> bool:
+    return define_protocol_types(bv, "InstallProtocolInterface", 1, 3, task)
