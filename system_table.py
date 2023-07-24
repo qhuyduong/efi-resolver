@@ -155,7 +155,7 @@ def propagate_variable_uses(
 
             func.create_user_var(
                 target.var,
-                expr_type,
+                str(expr_type).replace("struct _", ""),
                 var_name_for_type[
                     str(expr_type.target.registered_name.name).lstrip("_")
                 ],
