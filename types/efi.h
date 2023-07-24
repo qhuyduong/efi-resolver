@@ -1,8 +1,8 @@
 #ifndef __EFI_H__
 #define __EFI_H__
 
-#include "UefiBaseType.h"
-#include "UefiSpec.h"
+#include "Uefi/UefiBaseType.h"
+#include "Uefi/UefiSpec.h"
 #include "Protocol/Pcd.h"
 #include "Protocol/MmBase.h"
 #include "Protocol/LoadedImage.h"
@@ -11,5 +11,7 @@
 #include "Protocol/PiPcdInfo.h"
 #include "Protocol/MmAccess.h"
 #include "Protocol/DevicePathUtilities.h"
+#include "Protocol/SmbusHc.h"
+#include "Protocol/HiiString.h"
 
 #endif
