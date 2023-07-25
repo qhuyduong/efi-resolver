@@ -60,12 +60,13 @@ def propagate_variable_uses(bv: BinaryView, func: Function, var: SSAVariable, fu
                 continue
 
             try:
-                name = var.type.target.name
+                type = var.type.target.name
             except:
-                name = var.type.target.registered_name.name
+                type = var.type.target.registered_name.name
+            type = str(type).lstrip("_")
 
-            log_info(f"Propagating {name} pointer to data variable at {hex(target.constant)}")
-            bv.define_user_data_var(target.constant, var.type, var_name_for_type[str(name).lstrip("_")])
+            log_info(f"Propagating {type} pointer to data variable at {hex(target.constant)}")
+            bv.define_user_data_var(target.constant, var.type, var_name_for_type[type])
             updates = True
         elif isinstance(instr, HighLevelILDerefFieldSsa):
             # Dereferencing field, see if it is a field for a type we want to propagate
@@ -95,9 +96,9 @@ def propagate_variable_uses(bv: BinaryView, func: Function, var: SSAVariable, fu
                 if not isinstance(target, Constant):
                     continue
 
-                log_info(f"Propagating {expr_type.target.registered_name.name} pointer to data variable at {hex(target.constant)}")
-                bv.define_user_data_var(target.constant, str(expr_type).replace("struct _", ""),
-                                        var_name_for_type[str(expr_type.target.registered_name.name).lstrip("_")])
+                type = str(expr_type.target.registered_name.name).lstrip("_")
+                log_info(f"Propagating {type} pointer to data variable at {hex(target.constant)}")
+                bv.define_user_data_var(target.constant, str(expr_type).replace("struct _", ""), var_name_for_type[type])
                 updates = True
                 continue
             else:
