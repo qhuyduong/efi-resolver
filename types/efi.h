@@ -13,6 +13,8 @@
 
 #include "Protocol/LoadedImage.h"
 
+#include "Protocol/Metronome.h"
+
 #include "Protocol/MmBase.h"
 #include "Protocol/MmAccess.h"
 #include "Protocol/MmCommunication.h"
