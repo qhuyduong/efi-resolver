@@ -5,6 +5,7 @@ from typing import Optional, Tuple
 import os
 import sys
 import struct
+import uuid
 
 protocols = None
 
@@ -206,7 +207,7 @@ def define_protocol_types_for_refs(bv: BinaryView, func_name: str, refs, guid_pa
                 # Get the protocol from the GUID
                 protocol, guid_name = lookup_protocol_guid(guid)
                 if protocol is None:
-                    log_warn(f"Unknown EFI protocol {guid.hex()} referenced at {hex(ref.address)}")
+                    log_warn(f"Unknown EFI protocol {uuid.UUID(bytes_le=guid)} referenced at {hex(ref.address)}")
                     continue
 
                 # Rename the GUID with the protocol name
