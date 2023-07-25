@@ -10,6 +10,8 @@
 #include "Protocol/HiiDatabase.h"
 #include "Protocol/HiiString.h"
 
+#include "Protocol/FormBrowser2.h"
+
 #include "Protocol/LoadedImage.h"
 
 #include "Protocol/MmBase.h"
