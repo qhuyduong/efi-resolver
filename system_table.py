@@ -36,9 +36,7 @@ var_name_for_type = {
 
 def import_types_from_headers(bv: BinaryView):
     efi_hdr = os.path.join(os.path.dirname(__file__), "types", "efi.h")
-    types = bv.platform.parse_types_from_source_file(
-        efi_hdr, os.path.join(os.path.dirname(__file__), "types")
-    )
+    types = bv.platform.parse_types_from_source_file(efi_hdr, os.path.join(os.path.dirname(__file__), "types"))
     for name, type in types.types.items():
         bv.define_user_type(name, type)
 
@@ -48,18 +46,12 @@ def retype_entry_function(bv: BinaryView):
     entry_func.name = "ModuleEntryPoint"
     entry_func.return_type = Type.named_type_from_registered_type(bv, "EFI_STATUS")
     entry_func.parameter_vars[0].name = "ImageHandle"
-    entry_func.parameter_vars[0].type = Type.named_type_from_registered_type(
-        bv, "EFI_HANDLE"
-    )
+    entry_func.parameter_vars[0].type = Type.named_type_from_registered_type(bv, "EFI_HANDLE")
     entry_func.parameter_vars[1].name = "SystemTable"
-    entry_func.parameter_vars[1].type = Type.pointer(
-        bv, Type.named_type_from_registered_type(bv, "EFI_SYSTEM_TABLE")
-    )
+    entry_func.parameter_vars[1].type = Type.pointer(bv, Type.named_type_from_registered_type(bv, "EFI_SYSTEM_TABLE"))
 
 
-def propagate_variable_uses(
-    bv: BinaryView, func: Function, var: SSAVariable, func_queue: List[Function]
-) -> bool:
+def propagate_variable_uses(bv: BinaryView, func: Function, var: SSAVariable, func_queue: List[Function]) -> bool:
     global types_to_propagate, var_name_for_type
     updates = False
 
@@ -82,9 +74,7 @@ def propagate_variable_uses(
                     if param_idx >= len(target.parameter_vars):
                         continue
                     target.parameter_vars[param_idx].type = var.type
-                    target.parameter_vars[param_idx].name = var_name_for_type[
-                        var.type.target.name
-                    ]
+                    target.parameter_vars[param_idx].name = var_name_for_type[var.type.target.name]
                     if target not in func_queue:
                         func_queue.append(target)
                     updates = True
@@ -102,12 +92,8 @@ def propagate_variable_uses(
             except:
                 name = var.type.target.registered_name.name
 
-            log_info(
-                f"Propagating {name} pointer to data variable at {hex(target.constant)}"
-            )
-            bv.define_user_data_var(
-                target.constant, var.type, var_name_for_type[str(name).lstrip("_")]
-            )
+            log_info(f"Propagating {name} pointer to data variable at {hex(target.constant)}")
+            bv.define_user_data_var(target.constant, var.type, var_name_for_type[str(name).lstrip("_")])
             updates = True
         elif isinstance(instr, HighLevelILDerefFieldSsa):
             # Dereferencing field, see if it is a field for a type we want to propagate
@@ -116,10 +102,7 @@ def propagate_variable_uses(
                 continue
             if not isinstance(expr_type.target, StructureType):
                 continue
-            if (
-                str(expr_type.target.registered_name.name).lstrip("_")
-                not in types_to_propagate
-            ):
+            if str(expr_type.target.registered_name.name).lstrip("_") not in types_to_propagate:
                 continue
 
             # See if this is an assignment to a variable, and propagate that variable if so
@@ -146,9 +129,7 @@ def propagate_variable_uses(
                 bv.define_user_data_var(
                     target.constant,
                     str(expr_type).replace("struct _", ""),
-                    var_name_for_type[
-                        str(expr_type.target.registered_name.name).lstrip("_")
-                    ],
+                    var_name_for_type[str(expr_type.target.registered_name.name).lstrip("_")],
                 )
                 updates = True
                 continue
@@ -158,9 +139,7 @@ def propagate_variable_uses(
             func.create_user_var(
                 target.var,
                 str(expr_type).replace("struct _", ""),
-                var_name_for_type[
-                    str(expr_type.target.registered_name.name).lstrip("_")
-                ],
+                var_name_for_type[str(expr_type.target.registered_name.name).lstrip("_")],
             )
             propagate_variable_uses(bv, func, target, func_queue)
             updates = True
@@ -195,9 +174,7 @@ def propagate_system_table_pointer(bv: BinaryView, task: BackgroundTask):
                 continue
             if param.type.target.name not in types_to_propagate:
                 continue
-            updates |= propagate_variable_uses(
-                bv, func, SSAVariable(param, 0), func_queue
-            )
+            updates |= propagate_variable_uses(bv, func, SSAVariable(param, 0), func_queue)
 
         if updates:
             bv.update_analysis_and_wait()
@@ -215,14 +192,10 @@ def propagate_system_table_pointer(bv: BinaryView, task: BackgroundTask):
         bv.define_user_data_var(sym.address, "EFI_RUNTIME_SERVICES*", "EfiRT")
     sym = bv.get_symbol_by_raw_name("EfiConOut")
     if sym is not None:
-        bv.define_user_data_var(
-            sym.address, "EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL*", "EfiConOut"
-        )
+        bv.define_user_data_var(sym.address, "EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL*", "EfiConOut")
     sym = bv.get_symbol_by_raw_name("EfiConIn")
     if sym is not None:
-        bv.define_user_data_var(
-            sym.address, "EFI_SIMPLE_TEXT_INPUT_PROTOCOL*", "EfiConIn"
-        )
+        bv.define_user_data_var(sym.address, "EFI_SIMPLE_TEXT_INPUT_PROTOCOL*", "EfiConIn")
 
     bv.update_analysis_and_wait()
     return True

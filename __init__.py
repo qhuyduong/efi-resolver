@@ -60,6 +60,4 @@ def resolve_efi(bv: BinaryView):
     Task(bv).start()
 
 
-PluginCommand.register(
-    "Resolve EFI Protocols", "Automatically resolve usage of EFI protocols", resolve_efi
-)
+PluginCommand.register("Resolve EFI Protocols", "Automatically resolve usage of EFI protocols", resolve_efi)

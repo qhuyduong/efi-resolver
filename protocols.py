@@ -29,9 +29,7 @@ def init_protocol_mapping():
     if protocols is not None:
         return True
 
-    efi_defs = open(
-        os.path.join(os.path.dirname(__file__), "types", "efi.c"), "r"
-    ).readlines()
+    efi_defs = open(os.path.join(os.path.dirname(__file__), "types", "efi.c"), "r").readlines()
 
     protocols = {}
 
@@ -39,21 +37,13 @@ def init_protocol_mapping():
     guids = []
     for line in efi_defs:
         if line.startswith("///@protocol"):
-            guid = (
-                line.split("///@protocol")[1]
-                .replace("{", "")
-                .replace("}", "")
-                .strip()
-                .split(",")
-            )
+            guid = line.split("///@protocol")[1].replace("{", "").replace("}", "").strip().split(",")
             guid = [int(x, 16) for x in guid]
             guid = struct.pack("<IHHBBBBBBBB", *guid)
             guids.append((guid, None))
         elif line.startswith("///@binding"):
             guid_name = line.split(" ")[1]
-            guid = (
-                line.split(" ")[2].replace("{", "").replace("}", "").strip().split(",")
-            )
+            guid = line.split(" ")[2].replace("{", "").replace("}", "").strip().split(",")
             guid = [int(x, 16) for x in guid]
             guid = struct.pack("<IHHBBBBBBBB", *guid)
             guids.append((guid, guid_name))
@@ -122,9 +112,7 @@ def define_protocol_types_for_refs(
         for hlil in llil.hlils:
             if isinstance(hlil, HighLevelILCall):
                 # Check for status transform wrapper function
-                if len(hlil.params) == 1 and isinstance(
-                    hlil.params[0], HighLevelILCall
-                ):
+                if len(hlil.params) == 1 and isinstance(hlil.params[0], HighLevelILCall):
                     hlil = hlil.params[0]
 
                 # Found call to target field
@@ -240,9 +228,7 @@ def define_protocol_types_for_refs(
                 # Get the protocol from the GUID
                 protocol, guid_name = lookup_protocol_guid(guid)
                 if protocol is None:
-                    log_warn(
-                        f"Unknown EFI protocol {guid.hex()} referenced at {hex(ref.address)}"
-                    )
+                    log_warn(f"Unknown EFI protocol {guid.hex()} referenced at {hex(ref.address)}")
                     continue
 
                 # Rename the GUID with the protocol name
@@ -261,9 +247,7 @@ def define_protocol_types_for_refs(
                         log_info(
                             f"Setting type {protocol}* for local variable in {func_name} call at {hex(ref.address)}"
                         )
-                        name = nonconflicting_variable_name(
-                            func, variable_name_for_protocol(guid_name)
-                        )
+                        name = nonconflicting_variable_name(func, variable_name_for_protocol(guid_name))
                         func.create_user_var(dest, f"{protocol}*", name)
                 elif isinstance(dest, Constant):
                     dest = dest.constant
