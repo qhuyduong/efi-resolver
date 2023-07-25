@@ -1,27 +1,12 @@
-from binaryninja import (
-    BinaryView,
-    BackgroundTask,
-    HighLevelILCall,
-    RegisterValueType,
-    HighLevelILAddressOf,
-    HighLevelILVar,
-    Constant,
-    Function,
-    HighLevelILVarSsa,
-    HighLevelILVarInitSsa,
-    TypeFieldReference,
-    bundled_plugin_path,
-    log_info,
-    log_warn,
-    log_alert,
-)
+from binaryninja import (BinaryView, BackgroundTask, HighLevelILCall, RegisterValueType, HighLevelILAddressOf,
+                         HighLevelILVar, Constant, Function, HighLevelILVarSsa, HighLevelILVarInitSsa,
+                         TypeFieldReference, bundled_plugin_path, log_info, log_warn, log_alert)
 from typing import Optional, Tuple
 import os
 import sys
 import struct
 
 protocols = None
-
 
 def init_protocol_mapping():
     # Parse EFI definitions only once
@@ -60,17 +45,32 @@ def init_protocol_mapping():
 
     return True
 
-
 def lookup_protocol_guid(guid: bytes) -> Optional[Tuple[str, str]]:
     global protocols
     if guid in protocols:
         return protocols[guid]
     return (None, None)
 
-
 def variable_name_for_protocol(protocol: str) -> str:
-    return protocol.rstrip("Guid").rstrip("Protocol")
-
+    name = protocol
+    if name.startswith("EFI_"):
+        name = name[4:]
+    if name.endswith("_GUID"):
+        name = name[:-5]
+    if name.endswith("_PROTOCOL"):
+        name = name[:-9]
+    case_str = ""
+    first = True
+    for c in name:
+        if c == "_":
+            first = True
+            continue
+        elif first:
+            case_str += c.upper()
+            first = False
+        else:
+            case_str += c.lower()
+    return case_str
 
 def nonconflicting_variable_name(func: Function, base_name: str) -> str:
     idx = 0
@@ -87,15 +87,7 @@ def nonconflicting_variable_name(func: Function, base_name: str) -> str:
         name = f"{base_name}_{idx}"
     return name
 
-
-def define_protocol_types_for_refs(
-    bv: BinaryView,
-    func_name: str,
-    refs,
-    guid_param: int,
-    interface_param: int,
-    task: BackgroundTask,
-) -> bool:
+def define_protocol_types_for_refs(bv: BinaryView, func_name: str, refs, guid_param: int, interface_param: int, task: BackgroundTask) -> bool:
     refs = list(refs)
     for ref in refs:
         if task.cancelled:
@@ -122,10 +114,7 @@ def define_protocol_types_for_refs(
                 # Get GUID parameter and read it from the binary or the stack
                 guid_addr = hlil.params[guid_param].value
                 guid = None
-                if guid_addr.type in [
-                    RegisterValueType.ConstantValue,
-                    RegisterValueType.ConstantPointerValue,
-                ]:
+                if guid_addr.type in [RegisterValueType.ConstantValue, RegisterValueType.ConstantPointerValue]:
                     guid = bv.read(guid_addr.value, 16)
                     if not guid or len(guid) < 16:
                         continue
@@ -143,10 +132,7 @@ def define_protocol_types_for_refs(
                         if width == 0 or width > 8:
                             break
                         value = mlil.get_stack_contents(guid_addr.value + offset, width)
-                        if value.type in [
-                            RegisterValueType.ConstantValue,
-                            RegisterValueType.ConstantPointerValue,
-                        ]:
+                        if value.type in [RegisterValueType.ConstantValue, RegisterValueType.ConstantPointerValue]:
                             value = value.value
                         else:
                             break
@@ -208,17 +194,9 @@ def define_protocol_types_for_refs(
                         continue
 
                     # This function is a wrapper, resolve protocols for calls to this function
-                    log_info(
-                        f"Found EFI protocol wrapper {func_name} at {hex(ref.address)}, checking references to wrapper function"
-                    )
-                    if not define_protocol_types_for_refs(
-                        bv,
-                        func.name,
-                        bv.get_code_refs(func.start),
-                        incoming_guid_param_idx,
-                        incoming_interface_param_idx,
-                        task,
-                    ):
+                    log_info(f"Found EFI protocol wrapper {func_name} at {hex(ref.address)}, checking references to wrapper function")
+                    if not define_protocol_types_for_refs(bv, func.name, bv.get_code_refs(func.start),
+                                                          incoming_guid_param_idx, incoming_interface_param_idx, task):
                         return False
                     continue
 
@@ -244,16 +222,12 @@ def define_protocol_types_for_refs(
                     dest = dest.src
                     if isinstance(dest, HighLevelILVar):
                         dest = dest.var
-                        log_info(
-                            f"Setting type {protocol}* for local variable in {func_name} call at {hex(ref.address)}"
-                        )
+                        log_info(f"Setting type {protocol}* for local variable in {func_name} call at {hex(ref.address)}")
                         name = nonconflicting_variable_name(func, variable_name_for_protocol(guid_name))
                         func.create_user_var(dest, f"{protocol}*", name)
                 elif isinstance(dest, Constant):
                     dest = dest.constant
-                    log_info(
-                        f"Setting type {protocol}* for global variable at {hex(dest)} in {func_name} call at {hex(ref.address)}"
-                    )
+                    log_info(f"Setting type {protocol}* for global variable at {hex(dest)} in {func_name} call at {hex(ref.address)}")
                     sym = bv.get_symbol_at(dest)
                     name = f"{variable_name_for_protocol(guid_name)}_{dest:x}"
                     if sym is not None:
@@ -263,14 +237,7 @@ def define_protocol_types_for_refs(
     bv.update_analysis_and_wait()
     return True
 
-
-def define_protocol_types(
-    bv: BinaryView,
-    field: str,
-    guid_param: int,
-    interface_param: int,
-    task: BackgroundTask,
-) -> bool:
+def define_protocol_types(bv: BinaryView, field: str, guid_param: int, interface_param: int, task: BackgroundTask) -> bool:
     boot_services = bv.types["EFI_BOOT_SERVICES"].target(bv)
     offset = None
     for member in boot_services.members:
@@ -280,27 +247,17 @@ def define_protocol_types(
     if offset is None:
         log_warn(f"Could not find {field} member in EFI_BOOT_SERVICES")
         return True
-    return define_protocol_types_for_refs(
-        bv,
-        field,
-        bv.get_code_refs_for_type_field("EFI_BOOT_SERVICES", offset),
-        guid_param,
-        interface_param,
-        task,
-    )
-
+    return define_protocol_types_for_refs(bv, field, bv.get_code_refs_for_type_field("EFI_BOOT_SERVICES", offset),
+                                          guid_param, interface_param, task)
 
 def define_handle_protocol_types(bv: BinaryView, task: BackgroundTask) -> bool:
     return define_protocol_types(bv, "HandleProtocol", 1, 2, task)
 
-
 def define_open_protocol_types(bv: BinaryView, task: BackgroundTask) -> bool:
     return define_protocol_types(bv, "OpenProtocol", 1, 2, task)
 
-
 def define_locate_protocol_types(bv: BinaryView, task: BackgroundTask) -> bool:
     return define_protocol_types(bv, "LocateProtocol", 0, 2, task)
-
 
 def define_install_protocol_interface_types(bv: BinaryView, task: BackgroundTask) -> bool:
     return define_protocol_types(bv, "InstallProtocolInterface", 1, 3, task)
