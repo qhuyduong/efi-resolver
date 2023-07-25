@@ -33,7 +33,7 @@ def init_protocol_mapping():
             guid = struct.pack("<IHHBBBBBBBB", *guid)
             guids.append((guid, guid_name))
         elif line.startswith("struct"):
-            name = line.split(" ")[1].strip()
+            name = line.split(" ")[1].strip().rstrip(";")
             for guid_info in guids:
                 guid, guid_name = guid_info
                 if guid_name is None:
