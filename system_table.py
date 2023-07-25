@@ -94,17 +94,17 @@ def propagate_variable_uses(bv: BinaryView, func: Function, var: SSAVariable, fu
                 target = target.src
                 if not isinstance(target, Constant):
                     continue
-                type = str(expr_type.target.registered_name.name).lstrip("_")
 
-                log_info(f"Propagating {type} pointer to data variable at {hex(target.constant)}")
-                bv.define_user_data_var(target.constant, type, var_name_for_type[type])
+                log_info(f"Propagating {expr_type.target.registered_name.name} pointer to data variable at {hex(target.constant)}")
+                bv.define_user_data_var(target.constant, str(expr_type).replace("struct _", ""),
+                                        var_name_for_type[str(expr_type.target.registered_name.name).lstrip("_")])
                 updates = True
                 continue
             else:
                 continue
 
-            type = str(expr_type.target.registered_name.name).lstrip("_")
-            func.create_user_var(target.var, type, var_name_for_type[type])
+            func.create_user_var(target.var, str(expr_type).replace("struct _", ""),
+                                 var_name_for_type[str(expr_type.target.registered_name.name).lstrip("_")])
             propagate_variable_uses(bv, func, target, func_queue)
             updates = True
 
