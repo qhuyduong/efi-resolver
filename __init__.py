@@ -1,6 +1,5 @@
 from binaryninja import PluginCommand, BinaryView, BackgroundTaskThread, log_alert
-from .protocols import (init_protocol_mapping, define_handle_protocol_types, define_open_protocol_types,
-                        define_locate_protocol_types, define_install_protocol_interface_types)
+from .protocols import init_protocol_mapping, define_handle_protocol_types, define_open_protocol_types, define_locate_protocol_types
 from .guids import init_guid_mapping, find_known_guids
 from .system_table import import_types_from_headers, retype_entry_function, propagate_system_table_pointer
 
@@ -42,10 +41,6 @@ def resolve_efi(bv: BinaryView):
 
                 self.progress = "Defining types for uses of LocateProtocol..."
                 if not define_locate_protocol_types(self.bv, self):
-                    return
-
-                self.progress = "Defining types for uses of InstallProtocolInterface..."
-                if not define_install_protocol_interface_types(self.bv, self):
                     return
             finally:
                 self.bv.commit_undo_actions()
