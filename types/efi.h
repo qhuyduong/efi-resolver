@@ -7,10 +7,9 @@
 #include "Protocol/DevicePathUtilities.h"
 
 #include "Protocol/HiiConfigRouting.h"
+#include "Protocol/HiiConfigAccess.h"
 #include "Protocol/HiiDatabase.h"
 #include "Protocol/HiiString.h"
-
-#include "Protocol/FormBrowser2.h"
 
 #include "Protocol/LoadedImage.h"
 
