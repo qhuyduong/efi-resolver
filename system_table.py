@@ -138,8 +138,7 @@ def propagate_system_table_pointer(bv: BinaryView, task: BackgroundTask):
                 continue
             if param.type.target.name not in types_to_propagate:
                 continue
-            updates |= propagate_variable_uses(
-                bv, func, SSAVariable(param, 0), func_queue)
+            updates |= propagate_variable_uses(bv, func, SSAVariable(param, 0), func_queue)
 
         if updates:
             bv.update_analysis_and_wait()
@@ -157,12 +156,10 @@ def propagate_system_table_pointer(bv: BinaryView, task: BackgroundTask):
         bv.define_user_data_var(sym.address, "EFI_RUNTIME_SERVICES*", "EfiRT")
     sym = bv.get_symbol_by_raw_name("EfiConOut")
     if sym is not None:
-        bv.define_user_data_var(
-            sym.address, "EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL*", "EfiConOut")
+        bv.define_user_data_var(sym.address, "EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL*", "EfiConOut")
     sym = bv.get_symbol_by_raw_name("EfiConIn")
     if sym is not None:
-        bv.define_user_data_var(
-            sym.address, "EFI_SIMPLE_TEXT_INPUT_PROTOCOL*", "EfiConIn")
+        bv.define_user_data_var(sym.address, "EFI_SIMPLE_TEXT_INPUT_PROTOCOL*", "EfiConIn")
 
     bv.update_analysis_and_wait()
     return True
