@@ -6,10 +6,14 @@ def convert_file(input_file, output_file):
         for line in infile.readlines():
             name = line.split("=")[0].replace(" ", "")
             guid = line.split("=")[1].replace(" ", "")
-            outfile.write(f"///@protocol {guid}")
-            protocol = re.sub(r"(?<!^)(?=[A-Z])", "_", name[1:]).upper()
-            outfile.write(f"///@binding {protocol} {guid}")
-            outfile.write(f"struct {protocol.replace('_GUID', '')}\n\n")
+            if "Protocol" in name:
+                outfile.write(f"///@protocol {guid}")
+                protocol = re.sub(r"(?<!^)(?=[A-Z])", "_", name[1:]).upper()
+                outfile.write(f"///@binding {protocol} {guid}")
+                outfile.write(f"struct {protocol.replace('_GUID', '')};\n\n")
+            else:
+                outfile.write(f"///@guid {guid}")
+                outfile.write(f"EFI_GUID {name};\n\n")
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
