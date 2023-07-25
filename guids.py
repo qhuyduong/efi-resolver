@@ -1,4 +1,4 @@
-from binaryninja import BinaryView, BinaryReader, Symbol, SymbolType, log_info, log_warn
+from binaryninja import BinaryView, BinaryReader, Symbol, SymbolType, VoidType, log_info, log_warn
 import os
 import struct
 import uuid
@@ -53,5 +53,7 @@ def find_known_guids(bv: BinaryView):
             name = guids.get(data)
 
             if name:
-                log_info(f"Found {name} at {hex(address)} ({uuid.UUID(bytes_le=data)})")
-                apply_guid_name(bv, name, address)
+                var = bv.get_data_var_at(address) 
+                if var is None or isinstance(var.type, VoidType):
+                    log_info(f"Found {name} at {hex(address)} ({uuid.UUID(bytes_le=data)})")
+                    apply_guid_name(bv, name, address)
