@@ -1,6 +1,7 @@
 from binaryninja import PluginCommand, BinaryView, BackgroundTaskThread, log_alert
 from .protocols import (init_protocol_mapping, define_handle_protocol_types, define_open_protocol_types,
                         define_locate_protocol_types, define_install_protocol_interface_types)
+from .guids import init_guid_mapping, find_known_guids
 from .system_table import import_types_from_headers, retype_entry_function, propagate_system_table_pointer
 
 def resolve_efi(bv: BinaryView):
@@ -13,6 +14,8 @@ def resolve_efi(bv: BinaryView):
             if not init_protocol_mapping():
                 return
 
+            init_guid_mapping()
+
             import_types_from_headers(self.bv)
 
             if "EFI_SYSTEM_TABLE" not in self.bv.types:
@@ -22,6 +25,8 @@ def resolve_efi(bv: BinaryView):
             self.bv.begin_undo_actions()
             try:
                 retype_entry_function(self.bv)
+
+                find_known_guids(self.bv)
 
                 self.progress = "Propagating EFI system table pointers..."
                 if not propagate_system_table_pointer(self.bv, self):
