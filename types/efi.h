@@ -260,4 +260,7 @@
 #include "Protocol/WiFi2.h"
 #include "Protocol/WiFi.h"
 
+// AMD Protocols
+#include "Protocol/AmdApcbDxe.h"
+
 #endif
