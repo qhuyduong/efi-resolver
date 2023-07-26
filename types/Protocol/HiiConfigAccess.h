@@ -16,7 +16,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #ifndef __EFI_HII_CONFIG_ACCESS_H__
 #define __EFI_HII_CONFIG_ACCESS_H__
 
-// #include <Protocol/FormBrowser2.h>
 #include "Protocol/FormBrowser2.h"
 
 #define EFI_HII_CONFIG_ACCESS_PROTOCOL_GUID  \

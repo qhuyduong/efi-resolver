@@ -16,15 +16,11 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #ifndef __UEFI_SPEC_H__
 #define __UEFI_SPEC_H__
 
-// #include <Uefi/UefiMultiPhase.h>
-#include "UefiMultiPhase.h"
+#include "Uefi/UefiMultiPhase.h"
 
-// #include <Protocol/DevicePath.h>
 #include "Protocol/DevicePath.h"
-// #include <Protocol/SimpleTextIn.h>
 #include "Protocol/SimpleTextIn.h"
-// #include <Protocol/SimpleTextInEx.h>
-// #include <Protocol/SimpleTextOut.h>
+#include "Protocol/SimpleTextInEx.h"
 #include "Protocol/SimpleTextOut.h"
 
 ///
@@ -2232,9 +2228,8 @@ typedef struct {
 //
 #define EFI_CAPSULE_FILE_DIRECTORY  L"\\EFI\\UpdateCapsule\\"
 
-// #include <Uefi/UefiPxe.h>
-// #include <Uefi/UefiGpt.h>
-// #include <Uefi/UefiInternalFormRepresentation.h>
+#include "Uefi/UefiPxe.h"
+#include "Uefi/UefiGpt.h"
 #include "Uefi/UefiInternalFormRepresentation.h"
 
 #endif

@@ -12,7 +12,6 @@
 #ifndef __HII_IMAGE_H__
 #define __HII_IMAGE_H__
 
-// #include <Protocol/GraphicsOutput.h>
 #include "Protocol/GraphicsOutput.h"
 
 #define EFI_HII_IMAGE_PROTOCOL_GUID \

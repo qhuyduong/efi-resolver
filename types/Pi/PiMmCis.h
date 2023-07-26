@@ -10,8 +10,6 @@
 #ifndef _PI_MMCIS_H_
 #define _PI_MMCIS_H_
 
-// #include <Pi/PiMultiPhase.h>
-// #include <Protocol/MmCpuIo.h>
 #include "Pi/PiMultiPhase.h"
 #include "Protocol/MmCpuIo.h"
 

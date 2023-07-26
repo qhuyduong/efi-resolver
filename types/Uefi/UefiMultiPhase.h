@@ -31,7 +31,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #define EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS  0x00000010
 
 #ifndef VFRCOMPILE
-  // #include <Guid/WinCertificate.h>
   #include "Guid/WinCertificate.h"
 ///
 /// Enumeration of memory types introduced in UEFI.

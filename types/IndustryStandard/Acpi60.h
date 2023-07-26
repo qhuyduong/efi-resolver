@@ -10,22 +10,7 @@
 #ifndef _ACPI_6_0_H_
 #define _ACPI_6_0_H_
 
-// #include <IndustryStandard/Acpi51.h>
-
-///
-/// The common ACPI description table header.  This structure prefaces most ACPI tables.
-///
-typedef struct {
-  UINT32    Signature;
-  UINT32    Length;
-  UINT8     Revision;
-  UINT8     Checksum;
-  UINT8     OemId[6];
-  UINT64    OemTableId;
-  UINT32    OemRevision;
-  UINT32    CreatorId;
-  UINT32    CreatorRevision;
-} EFI_ACPI_DESCRIPTION_HEADER;
+#include "IndustryStandard/Acpi51.h"
 
 //
 // Ensure proper structure formats

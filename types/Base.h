@@ -18,7 +18,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 //
 // Include processor specific binding
 //
-// #include <ProcessorBind.h>
 #include "ProcessorBind.h"
 
 #if defined (_MSC_EXTENSIONS)

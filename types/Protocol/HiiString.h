@@ -12,7 +12,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #ifndef __HII_STRING_H__
 #define __HII_STRING_H__
 
-// #include <Protocol/HiiFont.h>
 #include "Protocol/HiiFont.h"
 
 #define EFI_HII_STRING_PROTOCOL_GUID \

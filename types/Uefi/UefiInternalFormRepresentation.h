@@ -15,7 +15,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #ifndef __UEFI_INTERNAL_FORMREPRESENTATION_H__
 #define __UEFI_INTERNAL_FORMREPRESENTATION_H__
 
-// #include <Guid/HiiFormMapMethodGuid.h>
 #include "Guid/HiiFormMapMethodGuid.h"
 
 ///

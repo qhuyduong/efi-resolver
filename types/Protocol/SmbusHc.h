@@ -13,7 +13,6 @@
 #ifndef __SMBUS_HC_H__
 #define __SMBUS_HC_H__
 
-// #include <IndustryStandard/SmBus.h>
 #include "IndustryStandard/SmBus.h"
 
 #define EFI_SMBUS_HC_PROTOCOL_GUID \

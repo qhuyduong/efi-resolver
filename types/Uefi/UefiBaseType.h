@@ -13,7 +13,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #ifndef __UEFI_BASETYPE_H__
 #define __UEFI_BASETYPE_H__
 
-// #include <Base.h>
 #include "Base.h"
 
 //
