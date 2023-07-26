@@ -1,15 +1,8 @@
-/** @file
-**/
-
-#ifndef __AMD_APCB_DXE_H__
-#define __AMD_APCB_DXE_H__
-
-
 #define AMD_APCB_DXE_PROTOCOL_GUID { 0x7189E04E,0x6284,0x4953,{ 0xA5,0x43,0xA3,0x1F,0x89,0xA1,0xA7,0xBF } }
 
 typedef struct _AMD_APCB_DXE_PROTOCOL AMD_APCB_DXE_PROTOCOL;
 
-typedef EFI_STATUS (* AMD_APCB_DXE_FUNCTION_1)();
+typedef EFI_STATUS (* AMD_APCB_DXE_SPI_WRITE)();
 typedef EFI_STATUS (* AMD_APCB_DXE_FUNCTION_2)(AMD_APCB_DXE_PROTOCOL* This, int32_t* arg2, uint32_t* arg3);
 typedef EFI_STATUS (* AMD_APCB_DXE_FUNCTION_3)();
 typedef EFI_STATUS (* AMD_APCB_DXE_FUNCTION_4)(AMD_APCB_DXE_PROTOCOL* This, int32_t* arg2, int32_t arg3, int32_t arg4);
@@ -46,7 +39,7 @@ typedef EFI_STATUS (* AMD_APCB_DXE_FUNCTION_33)(AMD_APCB_DXE_PROTOCOL* This);
 struct _AMD_APCB_DXE_PROTOCOL __packed
 {
 	UINTN Version;
-	AMD_APCB_DXE_FUNCTION_1 Function1;
+	AMD_APCB_DXE_SPI_WRITE SpiWrite;
 	AMD_APCB_DXE_FUNCTION_2 Function2;
 	AMD_APCB_DXE_FUNCTION_3 Function3;
 	AMD_APCB_DXE_FUNCTION_4 Function4;
@@ -92,5 +85,3 @@ struct _AMD_APCB_DXE_PROTOCOL __packed
 };
 
 extern EFI_GUID  gAmdApcbDxeProtocolGuid;
-
-#endif
