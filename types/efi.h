@@ -1,6 +1,8 @@
 #ifndef __EFI_H__
 #define __EFI_H__
 
+#define NO_MSABI_VA_FUNCS
+
 #include "Uefi.h"
 #include "PiDxe.h"
 
