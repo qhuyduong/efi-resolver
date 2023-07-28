@@ -172,7 +172,6 @@
 #include "Protocol/ReportStatusCodeHandler.h"
 #include "Protocol/Reset.h"
 #include "Protocol/ResetNotification.h"
-#include "Protocol/Rest.h"
 #include "Protocol/RestEx.h"
 #include "Protocol/RestJsonStructure.h"
 #include "Protocol/Rng.h"
