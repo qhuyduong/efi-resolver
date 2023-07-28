@@ -8,6 +8,7 @@ import os
 types_to_propagate = ["EFI_SYSTEM_TABLE", "EFI_RUNTIME_SERVICES", "EFI_BOOT_SERVICES"]
 var_name_for_type = {"EFI_SYSTEM_TABLE": "SystemTable", "EFI_RUNTIME_SERVICES": "RuntimeServices",
                      "EFI_BOOT_SERVICES": "BootServices"}
+entry_func_vars = [{"name": 'ImageHandle', "type": 'EFI_HANDLE'}, {"name": 'SystemTable', "type": 'EFI_SYSTEM_TABLE'}]
 
 def import_types_from_headers(bv: BinaryView):
     efi_hdr = os.path.join(os.path.dirname(__file__), "types", "efi.h")
@@ -20,10 +21,9 @@ def retype_entry_function(bv: BinaryView):
     entry_func = bv.entry_function
     entry_func.name = "ModuleEntryPoint"
     entry_func.return_type = "EFI_STATUS"
-    entry_func.parameter_vars[0].name = "ImageHandle"
-    entry_func.parameter_vars[0].type = "EFI_HANDLE"
-    entry_func.parameter_vars[1].name = "SystemTable"
-    entry_func.parameter_vars[1].type = "EFI_SYSTEM_TABLE*"
+    for index, var in enumerate(entry_func.parameter_vars):
+        var.name = entry_func_vars[index]["name"]
+        var.type = entry_func_vars[index]["type"]
 
 def propagate_variable_uses(bv: BinaryView, func: Function, var: SSAVariable, func_queue: List[Function]) -> bool:
     global types_to_propagate, var_name_for_type
